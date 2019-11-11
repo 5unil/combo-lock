@@ -1,0 +1,224 @@
+<!doctype html>
+<html>
+
+<!--Users have to break the combination lock by continously guessing
+ 	3 randomly generated numbers until they match. Any typical CSS code
+ 	has been written using jQuery to gain familiarity with the library-->
+
+<head>
+ 	<title>Combo Guess</title>
+
+ 	<meta charset="utf-8" />
+ 	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+ 	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+ </head>
+
+ <body>
+
+ 	<div id='start'>
+		<h1>Welcome to the Combination Guess</h1>
+		<button class='btn'>Start</button>
+	</div>
+
+	<div id='next' style='display:none'>
+		<h1>Guess the Combination...</h1>
+		<div id='region'>
+			<h4>Type in 3 numbers...</h4>
+			<input type='number' min='0' max='9' maxlength='1' autofocus/>
+			<input type='number' min='0' max='9' maxlength='1'/>
+			<input type='number' min='0' max='9' maxlength='1'/>
+			<br/><br/>
+			<button class='btn'>Open Lock 🔒</button>
+		</div>
+		<ul style='list-style-type:none'>
+			<li><span>Red</span> = Guess is too low</li>
+			<li><span>Blue</span> = Guess is too high</li>
+		</ul>
+	</div>
+
+ 	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+ 	<script>
+
+ 		$(function() {
+
+ 			//global vars to randomly generate the combination code
+ 			var num1 = Math.floor(Math.random()*10),
+ 			num2 = Math.floor(Math.random()*10),
+ 			num3 = Math.floor(Math.random()*10),
+ 			num = [num1,num2,num3];
+
+ 			console.log(num);
+ 			
+
+ 			$('#start, #next').css({
+
+ 				'font-family':'Avenir',
+ 				'width':'60%',
+ 				'margin':'0 auto',
+ 				'text-align':'center'
+ 			});
+
+ 			//setting vertical height for intro page to roughly centre content
+ 			$('#start').css('padding-top',function() {
+
+ 				return ($(window).height()/3)+'px';
+ 			});
+
+
+ 			$('.btn').css({
+
+ 				'font-size':'30px',
+ 				'background-color':'yellow',
+ 				'border':'1px solid grey',
+ 				'padding':'5px'
+
+  			});
+
+
+  			$('#region').css({
+
+  				'height':'300px',
+  				'background-color':'#C4EDA8',
+  				'margin':'50px 0',
+  				'padding':'10px'
+  			});
+
+
+  			//sets background colour for when mouse hovers on and off button
+ 			$('.btn').hover(function() {
+
+ 				$(this).css('background-color','orange')
+ 				}, function() {
+				$(this).css('background-color','yellow');
+
+ 			});
+
+ 			//sets slow fade out for intro content and slow fade in for combo content
+ 			$('#start .btn').click(function() {
+
+ 				$('#start').fadeOut('slow', function() {
+
+ 					$('#next').fadeIn('slow');
+
+ 				});
+ 			});
+
+
+ 			$('#next').find('span').css('color', function(){
+
+ 				return $(this).html();
+ 			});
+
+
+ 			//This could have also been done more simply using $('input').css()
+ 			$('#region').children('input').css({
+
+ 				'width':'80px',
+ 				'height':'80px',
+ 				'margin':'0 5px 0 5px',
+ 				'background-color':'white',
+ 				'border':'1px dotted grey',
+ 				'font-size':'30px',
+ 				'text-align':'center'
+
+ 			});
+
+
+ 			//not necessary here, just included to practice my jQuery
+ 			$('#region').children('input').css('margin-top',function() {
+
+ 				return($('#region').height()/15)+'px';
+ 			});
+
+
+ 			//after each keyboard click the focus changes to next input field
+ 			$('input[type=number]').keyup(function() {
+
+ 				$(this).next('input[type=number]').focus();
+ 
+ 			});
+
+
+ 			//switch statement to provide user with feedback for their combo guess
+ 			//bg colour is blue is guess too high, red if too low, green if correct
+ 			$('#next .btn').click(function() {
+
+ 				$.each(num,function(i,x) {
+
+ 					var value = $('input[type="number"]').eq(i);
+
+ 					switch (true) {
+
+ 						case (value.val() == x):
+
+ 							value.css('background-color','green');
+ 							break;
+
+ 						case (value.val() < x):
+
+ 							value.css('background-color','red');
+ 							break;
+
+ 						case (value.val() > x):
+
+ 							value.css('background-color','blue');
+ 							break;
+					};
+				});
+
+
+ 				//once all 3 input fields are green, user is nudged to play again
+				if ($('input[type=number]').filter(function() {
+
+					return $(this).css('background-color') == 'rgb(0, 128, 0)';
+
+				}).length == 3) {
+
+					$('h4').html("You've cracked it! <a href=''>Start again<a>");
+
+				};
+
+ 			});
+
+
+ 				//alternative soln to verify if combo guesses are correct
+ 				//uses a while loop is used whereas each() is used above
+
+ 				/*var i = 0, count = 0;
+
+ 				while (i < num.length) {
+
+ 					var value = $('input[type="number"]:eq('+i+')');
+
+ 					if (value.val() == num[i]) {
+
+ 						value.css('background-color','green');
+ 						count++;
+
+ 					} else if (value.val() < num[i]) {
+
+ 						value.css('background-color','red');
+
+ 					} else if (value.val() > num[i]) {
+
+ 						value.css('background-color','blue');
+
+ 					};
+ 					i++;
+ 				};
+
+
+ 				if (count==3) {
+
+ 					$('h4').html("You've cracked it! <a href=''>Start again<a>");
+ 				};
+ 			});*/
+
+ 		});
+
+ 	</script>
+
+</body>
+</html>
